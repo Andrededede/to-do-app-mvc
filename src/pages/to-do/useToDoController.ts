@@ -8,13 +8,12 @@ type LogState = {
   type: "success" | "error";
 } | null;
 
-export const useToDoViewModel = () => {
+export const useToDoController = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState("");
   const [logState, setLogState] = useState<LogState>(null);
   const [hideCompleted, setHideCompleted] = useState(false);
 
-  // MUDANÇA: Ref agora guarda string (ID) ou null
   const dragItem = useRef<string | null>(null);
 
   useEffect(() => {
@@ -90,7 +89,7 @@ export const useToDoViewModel = () => {
     }
   };
 
-  // --- LÓGICA DE DRAG AND DROP (ID BASED) ---
+  // --- LÓGICA DE DRAG AND DROP ---
 
   const handleDragStart = (id: string) => {
     dragItem.current = id;
@@ -138,18 +137,22 @@ export const useToDoViewModel = () => {
   };
 
   return {
-    tasks: filteredTasks,
-    newTaskText,
-    setNewTaskText,
-    logState,
-    handleAddTask,
-    handleRemoveTask,
-    handleToggleTask,
-    handleUpdateTask,
-    hideCompleted,
-    toggleHideCompleted,
-    handleDragStart,
-    handleDragEnter,
-    handleDragEnd,
+    model: {
+      tasks: filteredTasks,
+      newTaskText,
+      logState,
+      hideCompleted,
+    },
+    controller: {
+      setNewTaskText,
+      handleAddTask,
+      handleRemoveTask,
+      handleToggleTask,
+      handleUpdateTask,
+      toggleHideCompleted,
+      handleDragStart,
+      handleDragEnter,
+      handleDragEnd,
+    }
   };
 };

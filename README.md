@@ -1,4 +1,4 @@
-# To Do App - Arquitetura MVVM com React
+# To Do App - Arquitetura MVC com React
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
@@ -12,46 +12,68 @@
 
 ## 📖 Sobre o Projeto
 
-Este projeto foi desenvolvido como parte de um estudo de Engenharia de Software (IFCE 2025.2) para comparar arquiteturas de frontend. O objetivo principal foi implementar o padrão **MVVM (Model-View-ViewModel)** em React, garantindo uma estrita separação de responsabilidades.
+Este projeto foi desenvolvido como parte de um estudo de Engenharia de Software (IFCE 2025.2) para comparar arquiteturas de frontend. O objetivo principal foi implementar o padrão **MVC (Model-View-Controller)** em React, garantindo uma estrita separação de responsabilidades.
 
 Este projeto tem como pontos de destaque:
-* **Separação Arquitetural:** A View não contém regras de negócio; a ViewModel gerencia todo o estado e lógica.
+* **Separação Arquitetural:** A View é "burra", apenas exibindo dados do **Model** e enviando comandos pro **Controller**.
 * **Design:** Busca pela implementação de uma interface agradável visualmente.
 * **Simplicidade:** Se mantém no escopo de um trabalho acadêmico simples, sem preocupações elevadas com escalabilidade, performance, segurança e outros detalhes.
 
 
-## 🚀 Branches e Versões
+## 🚀 Como Rodar
 
-Para fins de demonstração e desenvolvimento, o projeto está dividido em branches:
-
-| Branch | Descrição |
-| :--- | :--- |
-| **`main`** | Contém a versão final integrada com o Backend Real (API REST/WebSocket). |
-| **`local`** | Contém a versão **Standalone**. Funciona inteiramente no navegador utilizando um *Mock Service* e `localStorage`. Ideal para testar a UI/UX sem precisar rodar um servidor. |
-
-> **Nota:** Se você clonou este repositório para testar rapidamente, faça o checkout na branch `local`.
+1.  Clone o repositório.
+2.  Instale as dependências:
+    ```bash
+    npm install
+    ```
+3.  Rode o projeto:
+    ```bash
+    npm run dev
+    ```
 
 ## ✨ Funcionalidades
 
 * ✅ **CRUD Completo:** Criar, Ler, Atualizar e Deletar tarefas.
-* ✋ **Drag and Drop Nativo:** Reordenação de tarefas com feedback visual ("ghost dragging" e placeholder pontilhado).
+* ✋ **Drag and Drop Nativo:** Reordenação de tarefas com feedback visual.
 * 🌙 **Dark/Light Mode:** Tema persistente com variáveis CSS nativas.
 * 🔍 **Filtros:** Alternar visualização entre todas as tarefas ou pendentes.
 * 🔔 **Feedback Visual:** Sistema de Toasts (notificações) para sucesso e erro.
 * 📱 **Responsivo:** Layout fluido que se adapta a diferentes tamanhos de tela.
 
-## 🏗️ Arquitetura (MVVM)
+## 🏗️ Arquitetura (MVC)
 
-A estrutura de pastas reflete a separação de responsabilidades do padrão MVVM:
+A estrutura de código reflete a separação de responsabilidades do padrão MVC:
 
 ```text
 src/
-├── hooks/           # Hooks globais (ex: useTheme para gestão de UI)
-├── models/          # Interfaces e Tipos (Task.ts)
-├── services/        # Camada de abstração de dados (Mock ou API Real)
-└── pages/
-    └── to-do/       # Módulo da Funcionalidade
-        ├── to-do-card/         # Componentes visuais menores (View)
-        ├── to-do-log/          # Componente de notificação (View)
-        ├── ToDoPage.tsx        # Página Principal (View)
-        └── useToDoViewModel.ts # Lógica de Negócio (ViewModel)
+├── hooks/           # Hooks globais (ex: useTheme)
+├── models/          # Interfaces (Task.ts) - O formato dos dados
+├── services/        # Lógica de API/Persistência (local_api.ts) - A origem dos dados
+├── pages/
+    └── to-do/
+        ├── ToDoPage.tsx          # View (Interface Gráfica)
+        └── useToDoController.ts  # Controller (Regra lógica e orquestração)
+```
+
+### 🧩 Papéis na Implementação:
+
+1.  **Model (Dados):**
+    *   Representado pelas interfaces (`Task`) e pelo estado bruto gerenciado (`tasks`, `newTaskText`).
+    *   Não sabe como será exibido na tela.
+    *   Não sabe como o usuário interage (clique, teclado).
+
+2.  **View (ToDoPage.tsx):**
+    *   Recebe o `model` do Controller e o desenha na tela.
+    *   Não decide nada sozinha (ex: não decide se pode apagar uma tarefa, ela pede ao Controller).
+    *   Conceitualmente, ela "observa" o Model (no React, isso acontece via re-renderização quando o estado muda).
+
+3.  **Controller (useToDoController.ts):**
+    *   A ponte entre o usuário e o sistema.
+    *   Recebe os eventos da View (ex: `handleAddTask`, `handleRemoveTask`).
+    *   Processa a lógica de negócio (chama a API, valida input).
+    *   Atualiza o Model, o que causa a atualização da View.
+
+---
+
+*Desenvolvido para a disciplina de Engenharia de Software - IFCE*
