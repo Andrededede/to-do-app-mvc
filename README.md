@@ -60,20 +60,11 @@ src/
 
 1.  **Model (Dados):**
     *   Representado pelas interfaces (`Task`) e pelo estado bruto gerenciado (`tasks`, `newTaskText`).
-    *   Não sabe como será exibido na tela.
-    *   Não sabe como o usuário interage (clique, teclado).
 
 2.  **View (ToDoPage.tsx):**
     *   Recebe o `model` do Controller e o desenha na tela.
-    *   Não decide nada sozinha (ex: não decide se pode apagar uma tarefa, ela pede ao Controller).
-    *   Conceitualmente, ela "observa" o Model (no React, isso acontece via re-renderização quando o estado muda).
 
 3.  **Controller (useToDoController.ts):**
-    *   A ponte entre o usuário e o sistema.
     *   Recebe os eventos da View (ex: `handleAddTask`, `handleRemoveTask`).
     *   Processa a lógica de negócio (chama a API, valida input).
     *   Atualiza o Model, o que causa a atualização da View.
-
----
-
-*Desenvolvido para a disciplina de Engenharia de Software - IFCE*
